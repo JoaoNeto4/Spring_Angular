@@ -7,18 +7,24 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+
 import com.example.algamoney.api.event.RecursoCriadoEvent;
 import com.example.algamoney.api.model.Pessoa;
 import com.example.algamoney.api.repository.PessoaRepository;
+import com.example.algamoney.api.service.PessoaService;
 
 @RestController
 @RequestMapping("/pessoas")
@@ -29,6 +35,9 @@ public class PessoaResource {
 	
 	@Autowired
 	private ApplicationEventPublisher publisher;
+	
+	@Autowired
+	private PessoaService pessoaService;
 	
 	@GetMapping
 	public List<Pessoa> listar(){
@@ -48,5 +57,51 @@ public class PessoaResource {
 	public Optional<Pessoa> buscarPeloCodigo(@PathVariable Long codigo) {
 		return pessoaRepository.findById(codigo);
 	}
+	
+	@DeleteMapping("/{codigo}")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public void remover(@PathVariable Long codigo) {
+		pessoaRepository.deleteById(codigo);
+	}
+
+	/* atualização completa, se faltar algum campo no PUT vai ficar como NULL  */
+	@PutMapping("/{codigo}")
+    public ResponseEntity<Pessoa> atualizar(@PathVariable long codigo, @Validated @RequestBody Pessoa pessoa) {
+		Pessoa pessoaSalva = pessoaRepository.findById(codigo)
+                .orElseThrow(() ->  new EmptyResultDataAccessException(1));
+									//throw new EmptyResultDataAccessException(1)
+		/*
+		BeanUtils.copyProperties(pessoa, pessoaSalva, "cdigo");
+		pessoaRepository.save(pessoaSalva);
+		return ResponseEntity.ok(pessoaSalva);
+		nao funciona
+		*/
+
+ // https://www.javaguides.net/2022/04/putmapping-spring-boot-example.html
+		pessoaSalva.setNome(pessoa.getNome());
+		pessoaSalva.setAtivo(pessoa.isAtivo());
+		pessoa.getEndereco().getLogradouro();
+		pessoa.getEndereco().getNumero();
+		pessoa.getEndereco().getComplemento();
+		pessoa.getEndereco().getBairro();
+		pessoa.getEndereco().getCep();
+		pessoa.getEndereco().getCidade();
+		pessoa.getEndereco().getEstado();
+		pessoaSalva.setEndereco(pessoa.getEndereco());
+
+		pessoaRepository.save(pessoaSalva);
+
+        return ResponseEntity.ok(pessoaSalva);
+    }
+	
+	
+	/* atualização parcial apenas em ATIVO, caso queira pode ser implementado mais  */
+	@PutMapping("/{codigo}/ativo")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public void atualizarPropriedadeAtivo(@PathVariable Long codigo, @RequestBody Boolean ativo) {
+		pessoaService.atualizarPropriedadeAtivo(codigo, ativo);
+	}
+	
+	
 	
 }
