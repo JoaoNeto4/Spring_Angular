@@ -15,6 +15,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import org.springframework.lang.NonNull;
+
 @Entity
 @Table(name= "lancamento")
 public class Lancamento {
@@ -23,28 +25,35 @@ public class Lancamento {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long codigo;
 	
+	@NonNull
 	private String descricao;
 	
 	//SE ATENTAR A ISTO, nome da coluna criada no "V03__criar_tabela_lancamento.sql"
+	@NonNull
 	@Column(name= "data_vencimento")
 	private LocalDate dataVencimento;
+	
 	
 	@Column(name= "data_pagamento")
 	private LocalDate dataPagamento;
 	
+	@NonNull
 	private BigDecimal valor;
 	
 	private String observacao;
 	
 	//ao declarar cria uma classe do tipi "ENUM"
+	@NonNull
 	@Enumerated(EnumType.STRING)
 	private TipoLancamento tipo;
 	
 	//tipo de relacionamento //nome da coluna
+	@NonNull
 	@ManyToOne 
 	@JoinColumn(name = "codigo_categoria")
 	private Categoria categoria;
 	
+	@NonNull
 	@ManyToOne 
 	@JoinColumn(name = "codigo_pessoa")
 	private Pessoa pessoa;

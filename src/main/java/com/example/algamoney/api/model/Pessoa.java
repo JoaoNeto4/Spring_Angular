@@ -8,8 +8,11 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import org.springframework.lang.NonNull;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name="pessoa")
@@ -58,6 +61,13 @@ public class Pessoa {
 
 	public void setAtivo(boolean ativo) {
 		this.ativo = ativo;
+	}
+	
+	//adicionado para facilitar desenvolvimento em LancamentoService
+	@JsonIgnore
+	@Transient
+	public boolean isInativo() {
+		return !this.ativo;
 	}
 
 	@Override
