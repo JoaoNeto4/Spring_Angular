@@ -38,13 +38,15 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
-		
-		<!-- Hibernate Java 8 para poder converter Date do banco para LocalDate do Java -->
+
+		<!-- Hibernate Java 8 para poder converter Date do banco para LocalDate 
+			do Java -->
 		<dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-java8</artifactId>
 		</dependency>
-		<!-- suporte do Jackson para as datas do java8, ou seja, converte de JSON para o java -->
+		<!-- suporte do Jackson para as datas do java8, ou seja, converte de JSON 
+			para o java -->
 		<dependency>
 			<groupId>com.fasterxml.jackson.datatype</groupId>
 			<artifactId>jackson-datatype-jsr310</artifactId>
@@ -55,7 +57,7 @@
 			<artifactId>commons-lang3</artifactId>
 			<version>3.4</version>
 		</dependency>
-		
+
 		<!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java -->
 		<dependency>
 			<groupId>mysql</groupId>
@@ -74,7 +76,19 @@
 			<artifactId>spring-boot-starter-security</artifactId>
 			<version>2.7.0</version>
 		</dependency>
+		<!-- spring security Oauth2 -->
+		<dependency>
+			<groupId>org.springframework.security.oauth</groupId>
+			<artifactId>spring-security-oauth2</artifactId>
+			<version>2.5.1.RELEASE</version>
+		</dependency>
 
+		<!-- https://mvnrepository.com/artifact/org.springframework.security/spring-security-jwt -->
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-jwt</artifactId>
+			<version>1.1.1.RELEASE</version>
+		</dependency>
 
 
 	</dependencies>
