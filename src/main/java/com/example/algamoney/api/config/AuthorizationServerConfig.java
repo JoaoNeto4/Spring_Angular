@@ -1,5 +1,9 @@
 package com.example.algamoney.api.config;
 
+import java.util.Arrays;
+
+import com.example.algamoney.api.config.token.CustomTokenEnhancer;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -10,6 +14,8 @@ import org.springframework.security.oauth2.config.annotation.configurers.ClientD
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
+import org.springframework.security.oauth2.provider.token.TokenEnhancer;
+import org.springframework.security.oauth2.provider.token.TokenEnhancerChain;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
@@ -18,6 +24,7 @@ import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 @Configuration
 @EnableAuthorizationServer
 public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdapter {
+	
     @Autowired
 	private AuthenticationManager authenticationManager;
 
@@ -31,20 +38,35 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 	public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
 		clients.inMemory()
 					.withClient("angular")
-					.secret("$2a$10$Z889w4Hp5fytSEHdBvNIve/FTp/hDPT7KmLugg99eZzzEsUgHpuYW") // @ngul@r0
+					//.secret("$2a$10$Z889w4Hp5fytSEHdBvNIve/FTp/hDPT7KmLugg99eZzzEsUgHpuYW") // @ngul@r0
+					.secret("$2a$10$Bq9FztsBAwQXhEaTSq109et9I.NlgFYTixpr.3eh/qGLsAf8jOiKu") // @ngul@r0
 					.scopes("read", "write")
 					.authorizedGrantTypes("password", "refresh_token")
 					.accessTokenValiditySeconds(1800)
 					.refreshTokenValiditySeconds(3600 * 24)
 				.and()
 					.withClient("mobile")
-					.secret("m0b1l30") // @ngul@r0
+					.secret("m0b1l30") //forma insegura
 					.scopes("read")
 					.authorizedGrantTypes("password", "refresh_token")
 					.accessTokenValiditySeconds(1800)
 					.refreshTokenValiditySeconds(3600 * 24);
 	}
 
+	@Override
+	public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
+
+		TokenEnhancerChain tokenEnhancerChain = new TokenEnhancerChain();
+		tokenEnhancerChain.setTokenEnhancers(Arrays.asList(tokenEnhancer(), accessTokenConverter()));
+
+		endpoints
+			.authenticationManager(authenticationManager)
+			.userDetailsService(userDetailsService)
+			.tokenEnhancer(tokenEnhancerChain)
+			.tokenStore(tokenStore())
+			.reuseRefreshTokens(false);
+	}
+	/*
 	@Override
 	public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
 		endpoints
@@ -54,6 +76,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 			.tokenStore(tokenStore())
 			.reuseRefreshTokens(false);
 	}
+	*/
 
 	@Bean
 	public JwtAccessTokenConverter accessTokenConverter() {
@@ -67,6 +90,11 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 	@Bean
 	public TokenStore tokenStore() {
 		return new JwtTokenStore(accessTokenConverter());
+	}
+	
+	@Bean
+	public TokenEnhancer tokenEnhancer() {
+		return new CustomTokenEnhancer();
 	}
 
 
