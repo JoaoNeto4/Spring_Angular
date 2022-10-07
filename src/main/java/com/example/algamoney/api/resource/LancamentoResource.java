@@ -8,16 +8,6 @@ import java.util.Optional;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
-import com.example.algamoney.api.dto.LancamentoEstatisticaCategoria;
-import com.example.algamoney.api.event.RecursoCriadoEvent;
-import com.example.algamoney.api.exceptionHandler.AlgamoneyExceptionHandler.Erro;
-import com.example.algamoney.api.model.Lancamento;
-import com.example.algamoney.api.repository.LancamentoRepository;
-import com.example.algamoney.api.repository.filter.LancamentoFilter;
-import com.example.algamoney.api.repository.projection.ResumoLancamento;
-import com.example.algamoney.api.service.LancamentoService;
-import com.example.algamoney.api.service.exception.PessoaInexistenteOuInativaException;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.MessageSource;
@@ -38,6 +28,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.algamoney.api.dto.LancamentoEstatisticaCategoria;
+import com.example.algamoney.api.dto.LancamentoEstatisticaDia;
+import com.example.algamoney.api.event.RecursoCriadoEvent;
+import com.example.algamoney.api.exceptionHandler.AlgamoneyExceptionHandler.Erro;
+import com.example.algamoney.api.model.Lancamento;
+import com.example.algamoney.api.repository.LancamentoRepository;
+import com.example.algamoney.api.repository.filter.LancamentoFilter;
+import com.example.algamoney.api.repository.projection.ResumoLancamento;
+import com.example.algamoney.api.service.LancamentoService;
+import com.example.algamoney.api.service.exception.PessoaInexistenteOuInativaException;
+
 @RestController
 @RequestMapping("/lancamentos")
 public class LancamentoResource {
@@ -54,9 +55,16 @@ public class LancamentoResource {
 	@Autowired
 	private MessageSource messageSource;
 	
+	@GetMapping("/estatistica/por-dia")
+	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_LANCAMENTO') and hasAuthority('SCOPE_read')")
+	public List<LancamentoEstatisticaDia> porDia(){
+		return this.lancamentoRepository.porDia(LocalDate.now());
+		//return this.lancamentoRepository.porDia(LocalDate.now().withMonth(1));//mês 1
+	}
+	
 	@GetMapping("/estatistica/por-categoria")
 	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_LANCAMENTO') and hasAuthority('SCOPE_read')")
-	public List<LancamentoEstatisticaCategoria> proCategoria(){
+	public List<LancamentoEstatisticaCategoria> porCategoria(){
 		return this.lancamentoRepository.porCategoria(LocalDate.now());
 	}
 	
