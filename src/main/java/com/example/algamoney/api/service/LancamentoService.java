@@ -12,6 +12,7 @@ import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.io.InputStream;
@@ -29,6 +30,19 @@ public class LancamentoService {
 	@Autowired
 	private PessoaRepository pessoaRepository;
 	
+	@Autowired 
+	private LancamentoRepository lancamentoRepository;
+	
+	/*
+	@Scheduled(fixedDelay = 1000 * 5)
+	public void avisarSobreLancamentosVencidos() {
+		System.out.println(">>>>>> Metodo sendo executado...");
+	}
+	@Scheduled("0 58 11 * * *")
+	public void avisarSobreLancamentosVencidos() {
+		System.out.println(">>>>>> Metodo sendo executado...");
+	}
+	*/
 	public byte[] relatorioPorPessoa(LocalDate inicio, LocalDate fim) throws Exception {
 		List<LancamentoEstatisticaPessoa> dados = lancamentoRepository.porPessoa(inicio, fim);
 
@@ -44,10 +58,8 @@ public class LancamentoService {
 				new JRBeanCollectionDataSource(dados));
 
 		return JasperExportManager.exportReportToPdf(jasperPrint);
-	}																																								
+	}
 	
-	@Autowired 
-	private LancamentoRepository lancamentoRepository;
 
 	public Lancamento salvar(Lancamento lancamento) {
 		Optional<Pessoa> pessoa = pessoaRepository.findById(lancamento.getPessoa().getCodigo());
