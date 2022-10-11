@@ -57,8 +57,8 @@ public class LancamentoService {
 	}
 	*/
 	
-	//@Scheduled(cron = "0 58 11 * * *")
-	@Scheduled(fixedDelay = 1000 * 10)
+	@Scheduled(cron = "0 58 11 * * *")
+	//@Scheduled(fixedDelay = 1000 * 10)
 	public void avisarSobreLancamentosVencidos() {
 		if(logger.isDebugEnabled()) {
 			logger.debug("Preparando envio de emails de aviso de lancamento vencidos");
