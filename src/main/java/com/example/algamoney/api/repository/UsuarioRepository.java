@@ -1,5 +1,6 @@
 package com.example.algamoney.api.repository;
 
+import java.util.List;
 import java.util.Optional;
 
 import com.example.algamoney.api.model.Usuario;
@@ -10,4 +11,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
     public Optional<Usuario> findByEmail(String email);
+    
+    public List<Usuario> findByPermissoesDescricao(String permissaoDescricao);
 }
