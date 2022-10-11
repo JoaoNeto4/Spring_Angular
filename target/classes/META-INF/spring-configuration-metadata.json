@@ -10,6 +10,12 @@
       "type": "com.example.algamoney.api.config.property.AlgamoneyApiProperty$Mail",
       "sourceType": "com.example.algamoney.api.config.property.AlgamoneyApiProperty",
       "sourceMethod": "public com.example.algamoney.api.config.property.AlgamoneyApiProperty.Mail getMail() "
+    },
+    {
+      "name": "algamoney.seguranca",
+      "type": "com.example.algamoney.api.config.property.AlgamoneyApiProperty$Seguranca",
+      "sourceType": "com.example.algamoney.api.config.property.AlgamoneyApiProperty",
+      "sourceMethod": "public com.example.algamoney.api.config.property.AlgamoneyApiProperty.Seguranca getSeguranca() "
     }
   ],
   "properties": [
@@ -32,6 +38,11 @@
       "name": "algamoney.mail.username",
       "type": "java.lang.String",
       "sourceType": "com.example.algamoney.api.config.property.AlgamoneyApiProperty$Mail"
+    },
+    {
+      "name": "algamoney.origin-permitida",
+      "type": "java.lang.String",
+      "sourceType": "com.example.algamoney.api.config.property.AlgamoneyApiProperty"
     },
     {
       "name": "algamoney.seguranca.enable-https",
