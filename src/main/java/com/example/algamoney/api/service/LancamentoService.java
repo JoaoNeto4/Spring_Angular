@@ -1,20 +1,5 @@
 package com.example.algamoney.api.service;
 
-import com.example.algamoney.api.dto.LancamentoEstatisticaPessoa;
-import com.example.algamoney.api.model.Lancamento;
-import com.example.algamoney.api.model.Pessoa;
-import com.example.algamoney.api.repository.LancamentoRepository;
-import com.example.algamoney.api.repository.PessoaRepository;
-import com.example.algamoney.api.service.exception.PessoaInexistenteOuInativaException;
-import net.sf.jasperreports.engine.JasperExportManager;
-import net.sf.jasperreports.engine.JasperFillManager;
-import net.sf.jasperreports.engine.JasperPrint;
-import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.stereotype.Service;
-
 import java.io.InputStream;
 import java.sql.Date;
 import java.time.LocalDate;
@@ -24,8 +9,30 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Service;
+
+import com.example.algamoney.api.dto.LancamentoEstatisticaPessoa;
+import com.example.algamoney.api.mail.Mailer;
+import com.example.algamoney.api.model.Lancamento;
+import com.example.algamoney.api.model.Pessoa;
+import com.example.algamoney.api.model.Usuario;
+import com.example.algamoney.api.repository.LancamentoRepository;
+import com.example.algamoney.api.repository.PessoaRepository;
+import com.example.algamoney.api.repository.UsuarioRepository;
+import com.example.algamoney.api.service.exception.PessoaInexistenteOuInativaException;
+
+import net.sf.jasperreports.engine.JasperExportManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
+
 @Service
 public class LancamentoService {
+	
+	private static final String DESTINATARIOS = "ROLE_PESQUISAR_LANCAMENTO";
 	
 	@Autowired
 	private PessoaRepository pessoaRepository;
@@ -33,16 +40,31 @@ public class LancamentoService {
 	@Autowired 
 	private LancamentoRepository lancamentoRepository;
 	
+	@Autowired
+	private UsuarioRepository usuarioRepository;
+	
+	@Autowired
+	private Mailer mailer;
+	
 	/*
 	@Scheduled(fixedDelay = 1000 * 5)
 	public void avisarSobreLancamentosVencidos() {
 		System.out.println(">>>>>> Metodo sendo executado...");
 	}
-	@Scheduled("0 58 11 * * *")
-	public void avisarSobreLancamentosVencidos() {
-		System.out.println(">>>>>> Metodo sendo executado...");
-	}
 	*/
+	
+	//@Scheduled(cron = "0 58 11 * * *")
+	@Scheduled(fixedDelay = 1000 * 10)
+	public void avisarSobreLancamentosVencidos() {
+		List<Lancamento> vencidos = lancamentoRepository
+			.findByDataVencimentoLessThanEqualAndDataPagamentoIsNull(LocalDate.now());
+		
+		List<Usuario> destinatarios = usuarioRepository
+				.findByPermissoesDescricao(DESTINATARIOS);
+		
+		mailer.avisarSobreLancamentosVencidos(vencidos, destinatarios);
+	}
+	
 	public byte[] relatorioPorPessoa(LocalDate inicio, LocalDate fim) throws Exception {
 		List<LancamentoEstatisticaPessoa> dados = lancamentoRepository.porPessoa(inicio, fim);
 
