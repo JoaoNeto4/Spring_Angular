@@ -1,10 +1,12 @@
 package com.example.algamoney.api.config.property;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
 
 @ConfigurationProperties("algamoney")
 @Component
+@Primary
 public class AlgamoneyApiProperty {
 
 	private String originPermitida = "http://localhost:4200";
@@ -29,6 +31,7 @@ public class AlgamoneyApiProperty {
 		this.originPermitida = originPermitida;
 	}
 
+	
 	public static class Seguranca {
 
 		private boolean enableHttps;
@@ -42,6 +45,7 @@ public class AlgamoneyApiProperty {
 		}
 
 	}
+	
 	
 	public static class Mail{
 		
@@ -84,8 +88,6 @@ public class AlgamoneyApiProperty {
 		public void setPassword(String password) {
 			this.password = password;
 		}
-		
-		
 	}
-
+	
 }

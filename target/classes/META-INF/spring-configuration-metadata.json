@@ -14,6 +14,26 @@
   ],
   "properties": [
     {
+      "name": "algamoney.mail.host",
+      "type": "java.lang.String",
+      "sourceType": "com.example.algamoney.api.config.property.AlgamoneyApiProperty$Mail"
+    },
+    {
+      "name": "algamoney.mail.password",
+      "type": "java.lang.String",
+      "sourceType": "com.example.algamoney.api.config.property.AlgamoneyApiProperty$Mail"
+    },
+    {
+      "name": "algamoney.mail.port",
+      "type": "java.lang.Integer",
+      "sourceType": "com.example.algamoney.api.config.property.AlgamoneyApiProperty$Mail"
+    },
+    {
+      "name": "algamoney.mail.username",
+      "type": "java.lang.String",
+      "sourceType": "com.example.algamoney.api.config.property.AlgamoneyApiProperty$Mail"
+    },
+    {
       "name": "algamoney.seguranca.enable-https",
       "type": "java.lang.Boolean",
       "sourceType": "com.example.algamoney.api.config.property.AlgamoneyApiProperty$Seguranca"
