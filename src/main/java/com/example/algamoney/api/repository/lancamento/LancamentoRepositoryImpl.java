@@ -105,6 +105,7 @@ public class LancamentoRepositoryImpl implements LancamentoRepositoryQuery {
 		
 		criteriaQuery.groupBy(root.get(Lancamento_.categoria));
 		
+		
 		TypedQuery<LancamentoEstatisticaCategoria> typedQuery = manager.createQuery(criteriaQuery);
 		
 		return typedQuery.getResultList();

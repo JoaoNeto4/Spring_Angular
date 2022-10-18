@@ -85,14 +85,14 @@ public class LancamentoResource {
 				.body(relatorio);
 	}
 	
-	@GetMapping("/estatistica/por-dia")
+	@GetMapping("/estatisticas/por-dia")
 	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_LANCAMENTO') and hasAuthority('SCOPE_read')")
 	public List<LancamentoEstatisticaDia> porDia(){
 		return this.lancamentoRepository.porDia(LocalDate.now());
 		//return this.lancamentoRepository.porDia(LocalDate.now().withMonth(1));//mês 1
 	}
 	
-	@GetMapping("/estatistica/por-categoria")
+	@GetMapping("/estatisticas/por-categoria")
 	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_LANCAMENTO') and hasAuthority('SCOPE_read')")
 	public List<LancamentoEstatisticaCategoria> porCategoria(){
 		return this.lancamentoRepository.porCategoria(LocalDate.now());
